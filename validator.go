@@ -465,13 +465,15 @@ func (vd *validator) strValidate(str string) {
 	var err error
 
 	// contentEncoding --
-	decoded := []byte(str)
+	var decoded []byte
 	if s.ContentEncoding != nil {
 		decoded, err = s.ContentEncoding.Decode(str)
 		if err != nil {
 			decoded = nil
 			vd.addError(&kind.ContentEncoding{Want: s.ContentEncoding.Name, Err: err})
 		}
+	} else if s.ContentMediaType != nil {
+		decoded = []byte(str)
 	}
 
 	var deserialized *any
